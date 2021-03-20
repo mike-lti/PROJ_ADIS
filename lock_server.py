@@ -15,6 +15,7 @@ import time
 from lock_pool import resource_lock
 from lock_pool import lock_pool
 import pickle
+import lock_skel
 
 
 
@@ -35,6 +36,7 @@ if(len(sys.argv) == 6):
    
 
     while True:
+        lista_resposta = lock_skel.ListSkeleton()
         presentTime = time.time()
         pool.clear_expired_locks(presentTime)
         pool.lock_limit(numBlocade)
@@ -42,26 +44,35 @@ if(len(sys.argv) == 6):
 
         (conn_sock, (addr, port)) = sock.accept()
         print('ligado a %s no porto %s' % (addr,port))
+
+
+
+
+
+
+
         
         msgPickle = conn_sock.recv(1024)
-        msgList = pickle.loads(msgPickle)
-        #msgList = msgStr.decode('utf-8')
-        print(msgList)
+        lista_resposta_final = lista_resposta.processMessage(msgPickle, pool, canLock)
+       
         
-        if msgList[0] == 10:
+        conn_sock.sendall(lista_resposta_final)
+        
+        ''' if msgList[0] == 10:
             toSendClient = pool.lock(int(float(msgList[1])), int(float(msgList[3])), int(float(msgList[2])), canLock)
             listClient = [11]
             listClient.append(toSendClient)
-            print(toSendClient)
-            ClientInfo = toSendClient.encode()
-            conn_sock.sendall(ClientInfo)
+            send = pickle.dumps(listClient, -1)
+            conn_sock.sendall(listClient)
 
         elif msgList[0] == 20:
+            print(msgList)
             toSendClient = pool.unlock(int(float(msgList[1])), int(float(msgList[2])))
             ClientInfo = toSendClient.encode()
             conn_sock.sendall(ClientInfo)
 
         elif msgList[0] == 30 or msgList == 40:
+            print(msgList)
             type_status = 0
             if  msgList[0] == 30:
                 type_status = "R"
@@ -90,7 +101,7 @@ if(len(sys.argv) == 6):
         elif msgList[0] == 80:
             toSendToCLient = str(pool)
             clientInfo = toSendToCLient.encode()
-            conn_sock.sendall(clientInfo)
+            conn_sock.sendall(clientInfo) '''
         
     sock.close()
 else:

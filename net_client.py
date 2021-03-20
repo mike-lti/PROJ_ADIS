@@ -10,6 +10,7 @@ Miguel Duarte Nº54941
 # zona para fazer importação
 import socket as s
 from sock_utils import create_tcp_client_socket
+import pickle
 
 
 # definição da classe server 
@@ -54,7 +55,9 @@ class server:
         """
         socket.sendall(data)
         respostaToData = socket.recv(1024)
-        print(respostaToData.decode('utf-8'))
+        respostaToDataPrint = pickle.loads(respostaToData)
+
+        print(respostaToDataPrint)
     
     def close(self, socket):
         """

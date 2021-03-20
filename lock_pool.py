@@ -170,10 +170,10 @@ class resource_lock:
         if self.client_id_getter() == client_id:
             self.client_id_setter(-1)
             self.locksetter("UNLOCKED")
-            return "OK"
+            return True
 
         else:
-            return "NOK"
+            return False
 
     def status(self, option):
         """
@@ -320,7 +320,7 @@ class lock_pool:
                 return unlockAnswer
 
 
-        return "UNKNOWN RESOURCE"
+        return None
 
     def status(self, option, resource_id):
         """
