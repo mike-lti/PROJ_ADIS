@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-Aplicações distribuídas - Projeto 1 - lock_server.py
+Aplicações distribuídas - Projeto 2 - lock_server.py
 Grupo: 29
 Números de aluno:
 Gonçalo Miguel Nº54944
@@ -17,7 +17,7 @@ from lock_pool import lock_pool
 import pickle
 import lock_skel
 import select as sel
-
+import struct
 
 
 if(len(sys.argv) == 6):
@@ -34,33 +34,34 @@ if(len(sys.argv) == 6):
     sock.bind((HOST, PORT))
     sock.listen(1)
     
-    ListenerSocket = sock
-    sockets = [ListenerSocket]
+    
+    sockets = [sock]
     while True:
         lista_resposta = lock_skel.ListSkeleton()
-        presentTime = time.time()
-        pool.clear_expired_locks(presentTime)
         pool.lock_limit(numBlocade)
         canLock = pool.max_locks_resource(numRecBlocade)
 
-        (conn_sock, (addr, port)) = sock.accept()
-        print('ligado a %s no porto %s' % (addr,port))
-
-
-
-
-
-
-
+        socket_list, M, X = sel.select(sockets, [], [])
+        for socket in socket_list:
+            presentTime = time.time()
+            pool.clear_expired_locks(presentTime)
+            if socket is sock:
+                conn_sock, (addr, port) = sock.accept()
+                print('Cliente ligado em %s no porto %s' % (addr,port))
+                sockets.append(conn_sock)
+            else:
+                sizeDataPickled = socket.recv(4)               
+                if sizeDataPickled:
+                    sizeData = struct.unpack('i', sizeDataPickled)[0]
+                    msgPickle = socket.recv(sizeData)
+                    lista_resposta_final = lista_resposta.processMessage(msgPickle, pool, canLock)       
+                    socket.sendall(lista_resposta_final)
+                else:
+                    socket.close()
+                    sockets.remove(socket)
+                    print("Cliente terminou ligação")
         
-        msgPickle = conn_sock.recv(1024)
-        lista_resposta_final = lista_resposta.processMessage(msgPickle, pool, canLock)
-       
         
-        conn_sock.sendall(lista_resposta_final)
-        
-        
-        
-    sock.close()
+            
 else:
     print("MISSING ARGUMENTS”")

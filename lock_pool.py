@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-Aplicações distribuídas - Projeto 1 - lock_pool.py
+Aplicações distribuídas - Projeto 2 - lock_pool.py
 Grupo: 29
 Números de aluno:
 Gonçalo Miguel Nº54944
@@ -330,13 +330,19 @@ class lock_pool:
         """
 
         resourceList = self.resource_list_getter()
-
         if option == "R":
             for resource in resourceList: 
                 if resource.resource_id_getter() == resource_id:
                     lockState = resource.lock_getter()
-                    return lockState
-            return "UNKNOWN RESOURCE"
+                    if lockState == "LOCKED":
+                        to_return = True
+                    elif lockState == "UNLOCKED":
+                        to_return = False
+                    elif lockState == "DISABLED":
+                        to_return = Ellipsis
+                    
+                    return to_return
+            return None
 
         elif option == "K":
             for resource in resourceList: 
@@ -373,9 +379,7 @@ class lock_pool:
             for resource in self.resource_list_getter():
                 if resource.lock_getter() == "DISABLED":
                     counterDisabledRec = counterDisabledRec + 1
-
             return counterDisabledRec
-
 
     def __repr__(self):
         """
@@ -383,7 +387,6 @@ class lock_pool:
         esta função é usada, por exemplo, se uma instância da classe for
         passada à função print ou str.
         """
-
         output = ""
         resourceList = self.resource_list_getter()
         for resource in resourceList:

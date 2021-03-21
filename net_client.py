@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Aplicações distribuídas - Projeto 1 - net_client.py
+Aplicações distribuídas - Projeto 2 - net_client.py
 Grupo: 29
 Números de aluno:
 Gonçalo Miguel Nº54944
@@ -28,11 +28,17 @@ class server:
         self.port = port       
 
     def adress_getter(self):
+        """
+        Devolve o valor do parâmetro self._adress 
+        """
 
         return self.address
 
 
     def port_getter(self):
+        """
+        Devolve o valor do parâmetro self._port
+        """
 
         return self.port
 
@@ -48,11 +54,12 @@ class server:
 
         return sock
 
-    def send_receive(self, socket, data):
+    def send_receive(self, socket, size_data, data):
         """
-        Envia os dados contidos em data para a socket da ligação, e retorna
+        Envia os dados contidos em data e size_data para a socket da ligação, e deserializa e retorna
         a resposta recebida pela mesma socket.
         """
+        socket.sendall(size_data)
         socket.sendall(data)
         respostaToData = socket.recv(1024)
         respostaToDataPrint = pickle.loads(respostaToData)

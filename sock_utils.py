@@ -1,5 +1,5 @@
 """
-Aplicações distribuídas - Projeto 1 - lock_client.py
+Aplicações distribuídas - Projeto 2 - sock_utils.py
 Grupo: 29
 Números de aluno:
 Gonçalo Miguel Nº54944
@@ -21,11 +21,7 @@ def create_tcp_server_socket(address, port, queue_size):
     listener_socket.bind((address, port))
     listener_socket.listen(queue_size)
 
-
     return listener_socket
-
-
-
 
 def create_tcp_client_socket(address, port):
     """
@@ -36,9 +32,6 @@ def create_tcp_client_socket(address, port):
     client_socket.connect((address, port))
 
     return client_socket
-
-
-
 
 def receive_all(socket, length):
     """
