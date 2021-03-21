@@ -16,6 +16,7 @@ from lock_pool import resource_lock
 from lock_pool import lock_pool
 import pickle
 import lock_skel
+import select as sel
 
 
 
@@ -33,8 +34,8 @@ if(len(sys.argv) == 6):
     sock.bind((HOST, PORT))
     sock.listen(1)
     
-   
-
+    ListenerSocket = sock
+    sockets = [ListenerSocket]
     while True:
         lista_resposta = lock_skel.ListSkeleton()
         presentTime = time.time()
@@ -58,50 +59,7 @@ if(len(sys.argv) == 6):
         
         conn_sock.sendall(lista_resposta_final)
         
-        ''' if msgList[0] == 10:
-            toSendClient = pool.lock(int(float(msgList[1])), int(float(msgList[3])), int(float(msgList[2])), canLock)
-            listClient = [11]
-            listClient.append(toSendClient)
-            send = pickle.dumps(listClient, -1)
-            conn_sock.sendall(listClient)
-
-        elif msgList[0] == 20:
-            print(msgList)
-            toSendClient = pool.unlock(int(float(msgList[1])), int(float(msgList[2])))
-            ClientInfo = toSendClient.encode()
-            conn_sock.sendall(ClientInfo)
-
-        elif msgList[0] == 30 or msgList == 40:
-            print(msgList)
-            type_status = 0
-            if  msgList[0] == 30:
-                type_status = "R"
-            else:
-                type_status = "K"
-            toSendToClient = pool.status(type_status, int(float(msgList[2])))
-            ClientInfo = str(toSendToClient).encode()
-            conn_sock.sendall(ClientInfo)
-
-        elif msgList[0] == 50 or msgList[0] == 60 or msgList[0] == 70:
-            type_stats = 0
-            if msgList[0] == 50:
-                type_stats = "Y"
-            elif msgList[0] == 60:
-                type_stats = "N"
-            else:
-                type_stats = "D"
-
-            toSendToCLient = pool.stats(type_stats)
-            clientInfo = str(toSendToCLient).encode()
-            conn_sock.sendall(clientInfo)
-
-        elif "CLOSE" in msgList[0]:
-            break
-
-        elif msgList[0] == 80:
-            toSendToCLient = str(pool)
-            clientInfo = toSendToCLient.encode()
-            conn_sock.sendall(clientInfo) '''
+        
         
     sock.close()
 else:
