@@ -15,7 +15,7 @@ import time
 from lock_pool import resource_lock
 from lock_pool import lock_pool
 import pickle
-import lock_skel
+import lock_skeleton
 import select as sel
 import struct
 
@@ -37,7 +37,7 @@ if(len(sys.argv) == 6):
     
     sockets = [sock]
     while True:
-        lista_resposta = lock_skel.ListSkeleton()
+        lista_resposta = lock_skeleton.ListSkeleton()
         pool.lock_limit(numBlocade)
         canLock = pool.max_locks_resource(numRecBlocade)
 

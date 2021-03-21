@@ -34,7 +34,7 @@ if(len(sys.argv) == 4):
             comando = input("Comando: ")
 
         except EOFError:
-            print("Invalid command")
+            print("Comando inválido")
             
         try:
             if comando == "EXIT":
@@ -79,9 +79,7 @@ if(len(sys.argv) == 4):
                     list_manager.list_formating(status, list(comando.split()[2]))
                     
                     list_to_send = list_manager.list_serialization(list_manager)
-                    
-
-                
+                                  
                     size_data = struct.pack('i',len(list_to_send))
 
                     client.send_receive(sock, size_data ,list_to_send)
@@ -116,11 +114,11 @@ if(len(sys.argv) == 4):
                 client.send_receive(sock, size_data ,list_to_send)       
 
             else: 
-                print("UNKNOWN COMMAND")
+                print("Comando desconhecido")
 
         except:
             print("Comando vazio")
 
     client.close(sock)
 else:
-    print("MISSING ARGUMENTS")
+    print("Argumentos em falta")
